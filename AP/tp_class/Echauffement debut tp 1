@@ -1,0 +1,94 @@
+class Point:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+
+    def __repr__(self):
+        return f"Point({self.x}, {self.y})"
+    
+    def norm(self):
+        return (self.x**2+self.y**2)**(1/2)
+   
+
+
+
+# Echauffement 2:
+
+# Q1) C'est la même chose
+# Q2) Il s'affiche : TypeError: norm() takes 0 positional arguments but 1 was given
+# Q3) <__main__.Point object at 0x100e52fd0>
+
+# Echauffement 3:
+
+# Q1) On a attribué a et b à la classe Bad, puis on ajoute 1 à a, donc à tout les items de la classe bad
+# Q2) Il faut faire un def __init__ 
+
+class Bad:
+    def __init__(self, items:list=None):
+        if items is None:
+            items=[]
+        self.items=items
+
+    def add(self,x):
+        self.items.append(x)
+
+
+# Echauffement 4 : 
+
+class Tirelire: 
+    def __init__(self,pièces:list=None):
+        if pièces is None:
+           pièces =[]
+        self.pièces=pièces 
+
+   
+   
+    def deposit(self,x):
+        assert x>0
+        self.pièces.append(x)
+
+    def total(self):
+        b=0
+        for x in self.pièces:
+            b+=x
+        return b
+
+    def __len__(self):
+        c=0
+        for x in self.pièces:
+            c+=1
+        return c
+     
+    
+    def __repr__(self):
+           return f"Tirelire({len(self.pièces)}coins , total= {})"
+
+    
+# pour tester
+
+try:
+    t = Tirelire()
+    t.deposit(0.5)
+    t.deposit(1)
+    assert len(t) == 2
+    assert t.total() == 1.5
+    assert repr(t) == "Tirelire(2 coins, total=1.50)"
+    other = Tirelire()
+    assert len(other) == 0
+    try:
+        other.deposit(-1)
+    except ValueError:
+        pass
+    else:
+        raise Exception("a negative value should raise ValueError")
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+
+
+# votre code
+
+
