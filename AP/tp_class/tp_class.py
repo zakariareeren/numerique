@@ -31,33 +31,50 @@ class Student:
             return d/c
     
             
-    def report(self):
-        lines=["+===============+===============+","|     Topic     |    Average    |","+===============+===============+",]
-        for x in self.dico:
+    # def report(self):
+       # lines=["+===============+===============+","|     Topic     |    Average    |","+===============+===============+",]
+        #for x in self.dico:
             lines.append(f"|     {x}     |    {student.compute_average(x)}    |")
-        "\n".join(lines)
+       # "\n".join(lines)
         
-Report for student Albert Einstein
-+===============+===============+
-|     Topic     |    Average    |
-+===============+===============+
-|   Chemistry   |     11.33     |
-+---------------+---------------+
-|    English    |     14.00     |
-+---------------+---------------+
-|    Physics    |     13.25     |
-+---------------+---------------+
-|    French     |     11.50     |
-+---------------+---------------+
-|  Mathematics  |     12.80     |
-+---------------+---------------+
-|  Scubadiving  |     12.50     |
-+---------------+---------------+
 
 
+class Classe:
+    def __init__(self, classname: str):
+        self.classname=classname
+        self.dico_classe= defaultdict(list) #On initialise un dico (comme précédemment) qui contiendra les élèves 
+   
+    def add_student(self, student: Student):
+        self.dico_classe[(student.first_name,student.last_name)]=student
 
+        
+    def __len__(self,classname):
+        c=0
+        for x in self.dico_classe:
+            c+=1
+        return c
+    
+    def __repr__(self):
+        return f"Classe({self.classname}, {list(self.dico_classe.values())})"
+    
+    def get_student(self,first_name: str, last_name: str):
+        if (first_name,last_name) in self.dico_classe: 
+            return self.dico_classe[(first_name, last_name)]
+        else: 
+            return None
+
+    def load_students_from_file(self,file_name):
+        with open(file_name,'r', encoding='utf-8') as fichier:
+            for line in fichier:
+                first_name, last_name= line.strip().split(',')
+                student=Student(first_name, last_name)
+                self.add_student(student)
+
+
+# Error message : [Errno 2] No such file or directory: 'classe.csv' : Ne marche pas alors que le fichier class.csv est au meme endroit que tp_class
 
 # pour tester
+
 
 try:
     student = Student("Achille", "Talon")
@@ -135,3 +152,46 @@ else:
 
 
 
+try:
+    student = Student("Achille", "Talon")
+    r = repr(student)
+    assert isinstance(r, str), "__repr__ must return a str"
+    assert "Achille" in r and "Talon" in r, f"first and last name should appear in {r!r}"
+except Exception as e:
+    print('OOPS - There is an issue in your code.')
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+
+# pour tester
+
+try:
+    classe = Classe("P20")
+    student = Student("Matthieu", "Mazière")
+    classe.add_student(student)
+    new_student = classe.get_student("Matthieu", "Mazière")
+    assert student is new_student
+    new_student = classe.get_student("Jérôme", "Adnot")
+    assert new_student is None
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+
+
+# pour tester
+
+try:
+    classe = Classe("P1920")
+    classe.load_students_from_file('classe.csv')
+    if len(classe) != 3:
+        raise Exception('OOPS - There is an issue in your load_students_from_file method')
+    assert classe.get_student("Enrico", "Fermi") is not None
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works ! ')
